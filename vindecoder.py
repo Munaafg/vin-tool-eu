@@ -416,7 +416,7 @@ def cablecheck(vins):
             results.append(fullCable)
             cables.append(cable)
         elif vinStart == 'W1K':
-            cable = Y4 #Mercedes passenger cars AMG
+            cable = Y3 #Mercedes passenger cars AMG
             fullCable = vin+" - " +cable
             results.append(fullCable)
             cables.append(cable)
@@ -450,13 +450,18 @@ def cablecheck(vins):
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
-        elif vinStart5 in ['WDB67','WDB93','WDB95','WDB96','WDB97']:
+        elif vinStart5 in ['WDB93','WDB95','WDB96','WDB97']:
             cable = askSE
             fullCable = vin+" - " +cable + " (Mercedes)" # For Merc Trucks
             results.append(fullCable)
             cables.append(cable)
+        elif vinStart4 in ['WDB6','WDF9']:
+            cable = askSE
+            fullCable = vin+" - " +cable + " (Mercedes)" #Merc Truck codes
+            results.append(fullCable)
+            cables.append(cable)
         elif vinStart in ['WDC','WDD']:
-            cable = Y4 #Y4 for MB passenger cars
+            cable = Y3 #Y3 for MB passenger cars
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
@@ -465,8 +470,8 @@ def cablecheck(vins):
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
-        elif vinStart == 'WDF':
-            cable = Y4 #Y4 for MB Vito/viano non Citan
+        elif vinStart4 in ['WDF4','WDF6','WDB4']:
+            cable = Y3 #Y3 for MB Vito/viano non Citan
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
