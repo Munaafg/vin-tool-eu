@@ -14,12 +14,13 @@ Y5 = "Y5"
 Y6 = "Y6"
 BFMS = "BFMS"
 TACHO = "BHGV+BTUH+BTDC-Y1"
+AEPC = "AEPC"
 BPC = "ACC-BPC"
 askSE = "Contact your SE, unable to automate"
 askSESpecial = "Special cable needed, please contact your SE"
 
 ##Make an Array which stores the cables
-cableNames = [Y0,Y3,Y4,Y5,Y6,BFMS,TACHO,BPC,askSE,askSESpecial]
+cableNames = [Y0,Y3,Y4,Y5,Y6,BFMS,TACHO,AEPC,BPC,askSE,askSESpecial]
 
 def cablecheck(vins):
     results = []
@@ -485,8 +486,18 @@ def cablecheck(vins):
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
+        elif vinStart == 'WFB':
+            cable = AEPC #For Feldbinder trailers
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
         elif vinStart == 'WHW':
             cable = Y4 #Hako street cleaners
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart == 'WK0':
+            cable = AEPC #For Kogel trailers
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
@@ -532,6 +543,16 @@ def cablecheck(vins):
             cables.append(cable)
         elif vinStart in ['WP0','WP1']:
             cable = Y6 #For Porsche
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart == 'WSK':
+            cable = AEPC #For Schmitz Cargobull trailers (DE)
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart == 'WSM':
+            cable = AEPC #For Schmitz Cargobull trailers (DE)
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
