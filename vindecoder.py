@@ -14,13 +14,14 @@ Y5 = "Y5"
 Y6 = "Y6"
 BFMS = "BFMS"
 TACHO = "BHGV+BTUH+BTDC-Y1"
-AEPC = "AEPC"
+AEDP = "AEDP"
+AEPC = "AEPC" #https://www.kba.de/SharedDocs/Publikationen/EN/SV/sv32_pdf_en.pdf?__blob=publicationFile&v=6 Trailer vin codes
 BPC = "ACC-BPC"
 askSE = "Contact your SE, unable to automate"
 askSESpecial = "Special cable needed, please contact your SE"
 
 ##Make an Array which stores the cables
-cableNames = [Y0,Y3,Y4,Y5,Y6,BFMS,TACHO,AEPC,BPC,askSE,askSESpecial]
+cableNames = [Y0,Y3,Y4,Y5,Y6,BFMS,TACHO,AEDP,AEPC,BPC,askSE,askSESpecial]
 
 def cablecheck(vins):
     results = []
@@ -336,6 +337,26 @@ def cablecheck(vins):
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
+        elif vinStart in ['VF9','VM3']:
+            cable = AEPC #For Lamberet trailers (FR)
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart == 'VFK':
+            cable = AEPC #For Fruehauf trailers (FR)
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart == 'VFN':
+            cable = AEPC #For Cherreau trailers (FR) #Chams has run into some issues with AEPC before
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart == 'VH1':
+            cable = AEPC #For Benalu trailers (FR) #Chams has run into some issues with AEPC before had to
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
         elif vinStart == 'VLU':
             cable = askSE
             fullCable = vin+" - " + cable + " (Scania)" #Scania bus chassis
@@ -501,6 +522,11 @@ def cablecheck(vins):
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
+        elif vinStart == 'WKE':
+            cable = AEPC #For Krone trailers
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
         elif vinStart == 'WKK':
             cable = TACHO #Mercedes/Setra bus
             fullCable = vin+" - " + cable
@@ -613,6 +639,11 @@ def cablecheck(vins):
             cables.append(cable)
         elif vinStart == 'YV3':
             cable = TACHO #Volvo buses (dont work on volvo portal)
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart == 'ZAH':
+            cable = AEDP #Rolfo trailers (UK - confirmed with Rolfo all come with Rubolite junction box)
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
