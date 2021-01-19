@@ -28,6 +28,8 @@ def adder_page():
             #print (session)
             if session["vins"] is not None:
                 result = None #Re init the variable again to remove chance of stale data.
+                cables = None #Re init cables again to remove chance of stale data
+                backupCables = None #Re init backup Cables again to remove chance of stale data
                 result = cablecheck(vins) #send vins to cablecheck function
                 #generate the result table HTML
                 if result:
