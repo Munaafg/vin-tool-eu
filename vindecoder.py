@@ -695,7 +695,8 @@ def cablecheck(vins):
             results.append(fullCable)
             cables.append(cable)
 
-    print ("VIN: " + vin + " - cable - " + cable)
+        print ("VIN: " + vin + " - cable - " + cable)
+
     return results, cables, backupCables
 
 #Volvo Bodybuilder portal web scraper
