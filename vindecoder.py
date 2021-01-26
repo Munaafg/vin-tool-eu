@@ -49,7 +49,10 @@ def cablecheck(vins):
         ###VOLVO
         if vinStart == 'YV2':
             cable = volvoDecoder(vin) #Send to the volvo decoder function web scraper
-            fullCable = vin+" - " + cable
+            if cable == askSE:
+                fullCable = vin+" - " + cable + " (Volvo)"
+            else:
+                fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
         elif vinStart == '1C4':
@@ -721,9 +724,12 @@ def volvoDecoder(vin):
     print ("OOps: Something Else",err)
 
   soup = BeautifulSoup(html_text, 'html.parser')
+  #print (soup)
   for link in soup.find_all('tr'):
-    #print (link.text)
+    print (link)
     if 'without fleet management system gateway' in link.text.lower():
-      return 'BHGV+BTUH+BTDC-Y1'
+      return TACHO
     elif 'fleet management system gateway' in link.text.lower():
-      return 'BFMS'
+      return BFMS
+
+  return askSE #If neither found fallback gracefully with automation error otherwise script will fail with no returned value
