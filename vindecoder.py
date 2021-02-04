@@ -271,10 +271,11 @@ def cablecheck(vins):
             results.append(fullCable)
             cables.append(cable)
         elif vinStart == 'TYA':
-            cable = Y4 #Mitsibushi Canter Fuso code
+            cable = Y4 + " (if tacho present change to BHGV+BTUH+BTDC-Y1)" #Mitsibushi Canter Fuso code likely has tachograph
             fullCable = vin+" - " + cable
             results.append(fullCable)
-            cables.append(cable)
+            cables.append(Y4)
+            backupCables.append(TACHO)
         elif vinStart == 'U5Y':
             cable = Y4 #KIA code (Sportage/Ceed)
             fullCable = vin+" - " + cable
@@ -726,7 +727,7 @@ def volvoDecoder(vin):
   soup = BeautifulSoup(html_text, 'html.parser')
   #print (soup)
   for link in soup.find_all('tr'):
-    print (link)
+    #print (link)
     if 'without fleet management system gateway' in link.text.lower():
       return TACHO
     elif 'fleet management system gateway' in link.text.lower():
