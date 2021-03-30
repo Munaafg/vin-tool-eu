@@ -8,15 +8,15 @@ fmsYear=['E','F','G','H','J','K','L','M','N','P','R','S'] #FMS years until 2025 
 tachoYear=['Y','1','2','3','4','5','6','7','8','9','A','B','C'] #Never needs to change
 
 Y0 = "CBL-VG-BJ1939-Y0"
-Y3 = "Y3"
-Y4 = "Y4"
-Y5 = "Y5"
-Y6 = "Y6"
-BFMS = "BFMS"
+Y3 = "CBL-VG-BOBDII-Y3"
+Y4 = "CBL-VG-BOBDII-Y4"
+Y5 = "CBL-VG-BOBDII-Y5"
+Y6 = "CBL-VG-BOBDII-Y6"
+BFMS = "CBL-VG-BFMS"
 TACHO = "BHGV+BTUH+BTDC-Y1"
-AEDP = "AEDP"
-AEPC = "AEPC" #https://www.kba.de/SharedDocs/Publikationen/EN/SV/sv32_pdf_en.pdf?__blob=publicationFile&v=6 Trailer vin codes
-BPC = "ACC-BPC"
+AEDP = "CBL-AG-AEDP"
+AEPC = "CBL-AG-AEPC" #https://www.kba.de/SharedDocs/Publikationen/EN/SV/sv32_pdf_en.pdf?__blob=publicationFile&v=6 Trailer vin codes
+BPC = "CBL-VG-BPC"
 askSE = "Contact your SE, unable to automate"
 askSESpecial = "Special cable needed, please contact your SE"
 
@@ -28,7 +28,11 @@ def cablecheck(vins):
     cables = []
     backupCables = []
 
-    for vin in vins.splitlines(): #split the vin inputs
+    splitvins = vins.splitlines()
+    sortedvins = sorted(splitvins)
+    print (sortedvins)
+
+    for vin in sortedvins: #split the vin inputs
         vin = vin.strip()  #do some trimming of trailing and mid white spaces in each reg
 
         ###Re-initialise variables for best practice (incase someone enters short vin or bad data)
@@ -341,7 +345,17 @@ def cablecheck(vins):
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
-        elif vinStart in ['VF9','VM3']:
+        elif vinStart6 == 'VF9607':
+            cable = AEPC #For MATHIEU trailers (FR)
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart6 == 'VF9627':
+            cable = BPC  #Setra bus from Victors comment VF962740140300323 which are <2001 buses
+            fullCable = vin+" - " + cable + " Please double check with SE (Mercedes Setra)"
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart == 'VM3':
             cable = AEPC #For Lamberet trailers (FR)
             fullCable = vin+" - " + cable
             results.append(fullCable)
@@ -456,6 +470,11 @@ def cablecheck(vins):
             fullCable = vin+" - " +cable
             results.append(fullCable)
             cables.append(cable)
+        elif vinStart == 'WAG':
+            cable = TACHO #For Neoplan Skyliner coach/bus
+            fullCable = vin+" - " +cable
+            results.append(fullCable)
+            cables.append(cable)
         elif vinStart == 'WAU':
             cable = Y6 #For Audi
             fullCable = vin+" - " +cable
@@ -533,7 +552,7 @@ def cablecheck(vins):
             cables.append(cable)
         elif vinStart == 'WKK':
             cable = TACHO #Mercedes/Setra bus
-            fullCable = vin+" - " + cable
+            fullCable = vin+" - " + cable + " Please double check with SE (Mercedes Setra)"
             results.append(fullCable)
             cables.append(cable)
         elif vinStart == 'WJM':
@@ -616,6 +635,12 @@ def cablecheck(vins):
             else:
                 cables.append(TACHO) ##main cable assume TACHO
                 backupCables.append(BFMS) ####backup cable add BFMS incase it is FMS but we cant decode it right
+        elif vinStart == 'XLW': #Terberg - check if Y3 or BPC is preferred install
+            cable = Y3 #OBD
+            fullCable = vin+" - " + cable + " if no OBD present, send ACC-BPC"
+            results.append(fullCable)
+            cables.append(cable)
+            backupCables.append(BPC)
         elif vinStart == 'XNL':
             cable = TACHO #For Go-Ahead buses DAF body/volvo VDL
             fullCable = vin+" - " + cable
@@ -700,6 +725,12 @@ def cablecheck(vins):
             cables.append(cable)
 
         print ("VIN: " + vin + " - cable - " + cable)
+
+    #sorted_results = []
+
+    #sorted_results_keys = sorted(cables, key=cables.get) #sort the results
+    #for w in sorted_results_keys:
+    #    sorted_results[w] = results[w]
 
     return results, cables, backupCables
 

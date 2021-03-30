@@ -30,6 +30,7 @@ def adder_page():
                 result = None #Re init the variable again to remove chance of stale data.
                 cables = None #Re init cables again to remove chance of stale data
                 backupCables = None #Re init backup Cables again to remove chance of stale data
+                #print (vins)
                 result = cablecheck(vins) #send vins to cablecheck function
                 #generate the result table HTML
                 if result:
@@ -102,7 +103,7 @@ def adder_page():
         <html>
             <body>
                 {errors}
-                <p><h1>Enter your VINs (seperated by new line):</h1></p>
+                <p><h1>Enter your VINs (separated by new line):</h1></p>
                 <form method="post" action=".">
                     <textarea name="vin1" cols="40" rows="5"></textarea>
                     <p><input type="submit" value="Generate Cable List" /></p>
