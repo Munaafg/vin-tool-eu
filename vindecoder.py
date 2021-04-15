@@ -34,6 +34,7 @@ def cablecheck(vins):
 
     for vin in sortedvins: #split the vin inputs
         vin = vin.strip()  #do some trimming of trailing and mid white spaces in each reg
+        vin = vin.upper() #fix any cases of characters being entered in lower case
 
         ###Re-initialise variables for best practice (incase someone enters short vin or bad data)
         vinStart=None
@@ -275,6 +276,12 @@ def cablecheck(vins):
             results.append(fullCable)
             cables.append(cable)
         elif vinStart == 'TYA':
+            cable = Y4 + " (if tacho present change to BHGV+BTUH+BTDC-Y1)" #Mitsibushi Canter Fuso code likely has tachograph
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(Y4)
+            backupCables.append(TACHO)
+        elif vinStart == 'TYB':
             cable = Y4 + " (if tacho present change to BHGV+BTUH+BTDC-Y1)" #Mitsibushi Canter Fuso code likely has tachograph
             fullCable = vin+" - " + cable
             results.append(fullCable)
