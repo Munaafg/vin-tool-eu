@@ -9,8 +9,8 @@ tachoYear=['Y','1','2','3','4','5','6','7','8','9','A','B','C'] #Never needs to 
 
 Y0 = "CBL-VG-BJ1939-Y0"
 Y3 = "CBL-VG-BOBDII-Y3"
-Y4 = "CBL-VG-BOBDII-Y4"
-Y5 = "CBL-VG-BOBDII-Y5"
+Y4 = "CBL-VG-BOBDII-Y4" #temp update to y0 to ship out more cables
+Y5 = "CBL-VG-BOBDII-Y5" #temp update to y0 to ship out more cables
 Y6 = "CBL-VG-BOBDII-Y6"
 BFMS = "CBL-VG-BFMS"
 TACHO = "BHGV+BTUH+BTDC-Y1"
@@ -29,10 +29,10 @@ def cablecheck(vins):
     backupCables = []
 
     splitvins = vins.splitlines()
-    sortedvins = sorted(splitvins)
-    print (sortedvins)
+    #sortedvins = sorted(splitvins)
+    #print (sortedvins)
 
-    for vin in sortedvins: #split the vin inputs
+    for vin in splitvins: #split the vin inputs
         vin = vin.strip()  #do some trimming of trailing and mid white spaces in each reg
         vin = vin.upper() #fix any cases of characters being entered in lower case
 
@@ -135,6 +135,11 @@ def cablecheck(vins):
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
+        elif vinStart == 'LDY':
+            cable = TACHO #For Zhongtong Coaches LCK6120G #LDYGCS2C7C0002136
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
         elif vinStart == 'LSH':
             cable = Y4 #For LDV/Maxus edeliver3
             fullCable = vin+" - " + cable
@@ -145,6 +150,11 @@ def cablecheck(vins):
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
+        elif vinStart == 'LZG':
+            cable = TACHO #For Zhongtong Coaches LCK6120G #LDYGCS2C7C0002136
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
         elif vinStart == 'LZY':
             cable = TACHO # For Yutong TC9
             fullCable = vin+" - " + cable
@@ -152,6 +162,11 @@ def cablecheck(vins):
             cables.append(cable)
         elif vinStart == 'LZZ':
             cable = TACHO # For Yutong TC9
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(cable)
+        elif vinStart == 'MMB':
+            cable = Y4 # For Mitsubishi
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
@@ -255,6 +270,12 @@ def cablecheck(vins):
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
+        elif vinStart == 'SUU':
+            cable = TACHO + " If no digital tachograph, send " + BPC #Solaris bus & Coach SUU341211KB021112
+            fullCable = vin+" - " + cable
+            results.append(fullCable)
+            cables.append(TACHO)
+            backupCables.append(BPC) #Backup BPC hardwire if no tachograph
         elif vinStart == 'TMA':
             cable = Y4 #Hyundai code
             fullCable = vin+" - " + cable
@@ -528,8 +549,13 @@ def cablecheck(vins):
             results.append(fullCable)
             cables.append(cable)
         elif vinStart == 'WEB':
-            cable = TACHO #for MB Evo bus
-            fullCable = vin+" - " + cable
+            if vinStart6 == 'WEB628':
+                cable = TACHO #WEB62800113099740 analog bus
+                backupCables.append(BPC) #Send both as we are unsure still
+                fullCable = vin+" - " + cable + " -check if digital tacho.  If analog tacho replace with ACC-BPC cable"
+            else:
+                cable = TACHO #for MB Evo bus
+                fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
         elif vinStart in ['WF0','WFO']: #Catch often typo of 0 and O for Ford Vin
@@ -558,7 +584,13 @@ def cablecheck(vins):
             results.append(fullCable)
             cables.append(cable)
         elif vinStart == 'WKK':
-            cable = TACHO #Mercedes/Setra bus
+            if vinStart6 == 'WKK628':
+                cable = BPC #WKK62878713106792 analog tacho
+            elif vinStart6 == 'WKK353':
+                cable = BPC #WKK35300001001237 analog tacho
+            else:
+                cable = TACHO #Mercedes/Setra bus
+                backupCables.append(BPC) #Send both as we are unsure still
             fullCable = vin+" - " + cable + " Please double check with SE (Mercedes Setra)"
             results.append(fullCable)
             cables.append(cable)
@@ -569,7 +601,13 @@ def cablecheck(vins):
             cables.append(BFMS)
             cables.append(TACHO)
         elif vinStart == 'WMA':
-            if modelYear in fmsYear:
+            if vinStart6 == 'WMAA01':
+                cable = BPC #WMAA010087B016015 MAN Bus 1998 code
+                cables.append(BPC)
+            elif vinStart6 == 'WMA35V':
+                cable = Y6 #Code for French MAN TGE vans WMA35VUY8L9001153
+                cables.append(Y6)
+            elif modelYear in fmsYear:
                 cable = "If UK/IE/FR - " + BFMS + " - If DE/ES customer please send "+ TACHO + " instead"
                 cables.append(BFMS)
                 backupCables.append(TACHO) ## have to put backup cables count for DE/ES
@@ -625,9 +663,9 @@ def cablecheck(vins):
         elif vinStart == 'XLR':
             ####vinStart6 codes ending in M all seem to be newest 2020.
             ####As new DAFs are found check the new first 6 digits (expect XLRASN for example) to keep up to date
-            if vinStart6 in ['XLRAD8','XLRAE4','XLRAE5','XLRAE6','XLRAS7','XLRAT7','XLRTE7','XLRTG4','XLRTG8']:
+            if vinStart6 in ['XLRAD8','XLRAE4','XLRAE5','XLRAE6','XLRAE7','XLRAE8','XLRAS7','XLRAT7','XLRTE7','XLRTG4','XLRTG8']:
                 cable = TACHO #These models I've analysed are <2013 codes always and default to tacho because data on the 2013s is very good with tacho, little benefit to sending BFMS
-            elif vinStart6 in ['XLRATM','XLRACM','XLRADM','XLRAE7','XLRAE8','XLRAEH','XLRAEL','XLRAEM','XLRAKM','XLRASH','XLRASM','XLRASM','XLRTE4','XLRADM']:
+            elif vinStart6 in ['XLRATM','XLRACM','XLRADM','XLRAEH','XLRAEL','XLRAEM','XLRAKM','XLRASH','XLRASM','XLRASM','XLRTE4','XLRADM']:
                 cable = BFMS #These models I've analysed are always >2013
             elif vinStart4 == 'XLR0':
                 cable = TACHO #These models I've analysed are <2013 codes always
@@ -674,7 +712,10 @@ def cablecheck(vins):
             results.append(fullCable)
             cables.append(cable)
         elif vinStart == 'YV3':
-            cable = TACHO #Volvo buses (dont work on volvo portal)
+            if vinStart6 == 'YV3R1A':
+                cable = BPC #YV3R1A61611007915 analog tacho bus
+            else:
+                cable = TACHO #Volvo buses (dont work on volvo portal)
             fullCable = vin+" - " + cable
             results.append(fullCable)
             cables.append(cable)
